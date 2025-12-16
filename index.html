@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Toko Online - Katalog Produk</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">
+                        <i class="fas fa-store"></i>
+                        <span>Toko<span class="highlight">Online</span></span>
+                    </a>
+                </div>
+                
+                <nav class="main-nav">
+                    <a href="index.html" class="nav-link active">
+                        <i class="fas fa-home"></i> Beranda
+                    </a>
+                    <a href="#produk" class="nav-link">
+                        <i class="fas fa-box"></i> Produk
+                    </a>
+                    <a href="#kategori" class="nav-link">
+                        <i class="fas fa-tags"></i> Kategori
+                    </a>
+                    <a href="#tentang" class="nav-link">
+                        <i class="fas fa-info-circle"></i> Tentang
+                    </a>
+                    
+                </nav>
+                
+                <div class="header-actions">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Cari produk...">
+                        <button class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="cart-icon" onclick="toggleCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </div>
+                    
+                    <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">  <!-- INI PASTI ADA -->
+    <div class="mobile-menu-header">
+        <span>Menu</span>
+        <button class="close-menu" onclick="toggleMobileMenu()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="mobile-menu-links">
+        <a href="index.html" class="mobile-nav-link active" onclick="toggleMobileMenu()">
+            <i class="fas fa-home"></i> Beranda
+        </a>
+        <a href="#produk" class="mobile-nav-link" onclick="toggleMobileMenu()">
+            <i class="fas fa-box"></i> Produk
+        </a>
+        <a href="#kategori" class="mobile-nav-link" onclick="toggleMobileMenu()">
+            <i class="fas fa-tags"></i> Kategori
+        </a>
+        <a href="#tentang" class="mobile-nav-link" onclick="toggleMobileMenu()">
+            <i class="fas fa-info-circle"></i> Tentang
+        </a>
+        
+    </div>
+</div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Temukan Produk Terbaik untuk Kebutuhan Anda</h1>
+                <p class="hero-subtitle">Berbagai produk berkualitas dengan harga terjangkau. Belanja mudah, aman, dan nyaman.</p>
+                <div class="hero-search">
+                    <input type="text" id="heroSearch" placeholder="Cari produk yang Anda butuhkan...">
+                    <button class="hero-search-btn">
+                        <i class="fas fa-search"></i> Cari
+                    </button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-box-open"></i>
+                        <div>
+                            <span class="stat-number" id="totalProducts">0</span>
+                            <span class="stat-label">Produk</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-shipping-fast"></i>
+                        <div>
+                            <span class="stat-number">Gratis</span>
+                            <span class="stat-label">Ongkir*</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">Aman</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Categories Section -->
+            <section class="categories-section" id="kategori">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-tags"></i> Kategori Produk
+                    </h2>
+                    <p class="section-subtitle">Telusuri produk berdasarkan kategori</p>
+                </div>
+                
+                <div class="categories-grid" id="categoriesGrid">
+                    <!-- Categories will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Products Section -->
+            <section class="products-section" id="produk">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-box"></i> Semua Produk
+                    </h2>
+                    <div class="section-controls">
+                        <div class="sort-options">
+                            <select id="sortSelect" onchange="sortProducts()">
+                                <option value="default">Urutkan</option>
+                                <option value="name_asc">Nama A-Z</option>
+                                <option value="name_desc">Nama Z-A</option>
+                                <option value="price_asc">Harga Terendah</option>
+                                <option value="price_desc">Harga Tertinggi</option>
+                                <option value="stock_desc">Stok Terbanyak</option>
+                            </select>
+                        </div>
+                        <div class="view-toggle">
+                            <button class="view-btn active" onclick="changeView('grid')">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button class="view-btn" onclick="changeView('list')">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="products-container">
+                    <div class="products-grid" id="productsGrid">
+                        <!-- Products will be loaded here -->
+                        <div class="loading-products">
+                            <i class="fas fa-spinner fa-spin"></i> Memuat produk...
+                        </div>
+                    </div>
+                    
+                    <div class="products-list" id="productsList" style="display: none;">
+                        <!-- List view products -->
+                    </div>
+                    
+                    <div class="no-products" id="noProducts" style="display: none;">
+                        <i class="fas fa-box-open fa-3x"></i>
+                        <h3>Tidak ada produk ditemukan</h3>
+                        <p>Coba gunakan kata kunci pencarian yang berbeda</p>
+                    </div>
+                </div>
+                
+                <div class="pagination" id="pagination">
+                    <!-- Pagination will be generated here -->
+                </div>
+            </section>
+
+            <!-- Featured Products -->
+            <section class="featured-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-star"></i> Produk Unggulan
+                    </h2>
+                    <p class="section-subtitle">Produk terbaik pilihan kami</p>
+                </div>
+                
+                <div class="featured-slider" id="featuredSlider">
+                    <!-- Featured products will be loaded here -->
+                </div>
+            </section>
+
+            <!-- About Section -->
+            <section class="about-section" id="tentang">
+                <div class="about-content">
+                    <div class="about-text">
+                        <h2>Tentang Toko Kami</h2>
+                        <p>Kami adalah toko online terpercaya yang menyediakan berbagai produk berkualitas dengan harga kompetitif. Komitmen kami adalah memberikan pengalaman berbelanja yang terbaik untuk setiap pelanggan.</p>
+                        <div class="about-features">
+                            <div class="feature">
+                                <i class="fas fa-shipping-fast"></i>
+                                <h4>Pengiriman Cepat</h4>
+                                <p>Proses pengiriman cepat dan aman</p>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-shield-alt"></i>
+                                <h4>Pembayaran Aman</h4>
+                                <p>Sistem pembayaran terjamin keamanannya</p>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-headset"></i>
+                                <h4>Dukungan 24/7</h4>
+                                <p>Customer service siap membantu Anda</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about-image">
+                        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d" alt="Toko Online">
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Shopping Cart -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>
+                <i class="fas fa-shopping-cart"></i> Keranjang Belanja
+            </h3>
+            <button class="close-cart" onclick="toggleCart()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="cart-body" id="cartBody">
+            <div class="empty-cart" id="emptyCart">
+                <i class="fas fa-shopping-cart fa-2x"></i>
+                <p>Keranjang belanja Anda kosong</p>
+                <button class="btn-continue" onclick="toggleCart()">
+                    Lanjutkan Belanja
+                </button>
+            </div>
+            
+            <div class="cart-items" id="cartItems" style="display: none;">
+                <!-- Cart items will be loaded here -->
+            </div>
+        </div>
+        
+        <div class="cart-footer" id="cartFooter" style="display: none;">
+            <div class="cart-summary">
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="cartSubtotal">Rp 0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Ongkir</span>
+                    <span id="cartShipping">Gratis</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="cartTotal">Rp 0</span>
+                </div>
+            </div>
+            
+            <button class="btn-checkout" onclick="checkout()">
+                <i class="fas fa-credit-card"></i> Checkout Sekarang
+            </button>
+            
+            <button class="btn-clear-cart" onclick="clearCart()">
+                <i class="fas fa-trash"></i> Kosongkan Keranjang
+            </button>
+        </div>
+    </div>
+
+    <!-- Product Quick View Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalProductName"></h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="modalProductContent">
+                <!-- Product details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-credit-card"></i> Checkout</h3>
+                <span class="close" onclick="closeCheckoutModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="checkoutForm">
+                    <div class="form-group">
+                        <label for="customerName">Nama Lengkap *</label>
+                        <input type="text" id="customerName" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customerPhone">No. WhatsApp *</label>
+                            <input type="tel" id="customerPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerEmail">Email</label>
+                            <input type="email" id="customerEmail">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customerAddress">Alamat Lengkap *</label>
+                        <textarea id="customerAddress" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="paymentMethod">Metode Pembayaran *</label>
+                        <select id="paymentMethod" required>
+                            <option value="">Pilih metode</option>
+                            <option value="bank_transfer">Transfer Bank</option>
+                            <option value="cod">Cash on Delivery (COD)</option>
+                            <option value="e_wallet">E-Wallet</option>
+                        </select>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <h4>Ringkasan Pesanan</h4>
+                        <div id="orderSummary">
+                            <!-- Order summary will be loaded here -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit-order">
+                            <i class="fas fa-paper-plane"></i> Kirim Pesanan
+                        </button>
+                        <button type="button" class="btn-cancel" onclick="closeCheckoutModal()">
+                            <i class="fas fa-times"></i> Batal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-content">
+            <i class="fas fa-check-circle"></i>
+            <span id="toastMessage"></span>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Memproses...</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <i class="fas fa-store"></i>
+                        <span>Toko<span class="highlight">Online</span></span>
+                    </div>
+                    <p>Solusi belanja online terpercaya dengan berbagai produk berkualitas.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Beranda</a></li>
+                        <li><a href="#produk">Produk</a></li>
+                        <li><a href="#kategori">Kategori</a></li>
+                        <li><a href="#tentang">Tentang Kami</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Kontak</h4>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-phone"></i> +62 812-3456-7890</li>
+                        <li><i class="fas fa-envelope"></i> info@tokoonline.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Jakarta, Indonesia</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Jam Operasional</h4>
+                    <ul>
+                        <li>Senin - Jumat: 08:00 - 17:00</li>
+                        <li>Sabtu: 08:00 - 15:00</li>
+                        <li>Minggu & Hari Libur: Tutup</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 TokoOnline. Semua hak dilindungi.</p>
+                <p>Dibuat dengan ❤️ menggunakan Google Sheets sebagai database</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

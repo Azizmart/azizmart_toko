@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Dashboard Barang - Mobile Friendly</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <div class="mobile-menu-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <i class="fas fa-warehouse"></i>
+            <h2>Inventory</h2>
+            <div class="mobile-close" onclick="toggleSidebar()">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="menu">
+            <button class="menu-btn active" onclick="showSection('dashboard')">
+                <i class="fas fa-tachometer-alt"></i> <span class="menu-text">Dashboard</span>
+            </button>
+            <button class="menu-btn" onclick="showSection('data')">
+                <i class="fas fa-boxes"></i> <span class="menu-text">Data Barang</span>
+            </button>
+            <button class="menu-btn" onclick="showSection('tambah')">
+                <i class="fas fa-plus-circle"></i> <span class="menu-text">Tambah Barang</span>
+            </button>
+            <button class="menu-btn" onclick="showSection('laporan')">
+                <i class="fas fa-chart-bar"></i> <span class="menu-text">Laporan</span>
+            </button>
+        </div>
+        <div class="info">
+            <p><i class="fas fa-sync-alt"></i> <span>Auto-save</span></p>
+            <p><i class="fas fa-database"></i> <span>Google Sheets</span></p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header>
+            <div class="header-left">
+                <h1 id="pageTitle">Dashboard</h1>
+                <div class="mobile-stats">
+                    <span id="mobileTotal">0</span> Barang
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn-refresh" onclick="loadData()" title="Refresh Data">
+                    <i class="fas fa-sync-alt"></i> <span class="btn-text">Refresh</span>
+                </button>
+                <div class="status" id="status">
+                    <i class="fas fa-circle"></i> <span>Sistem siap</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <div class="mobile-quick-nav">
+                <button class="mobile-nav-btn" onclick="showSection('data')">
+                    <i class="fas fa-list"></i> Data
+                </button>
+                <button class="mobile-nav-btn" onclick="showSection('tambah')">
+                    <i class="fas fa-plus"></i> Tambah
+                </button>
+                <button class="mobile-nav-btn" onclick="loadData()">
+                    <i class="fas fa-sync"></i> Refresh
+                </button>
+            </div>
+
+            <div class="stats-cards">
+                <div class="card stat-card">
+                    <div class="card-icon" style="background: #4CAF50;">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 id="totalBarang">0</h3>
+                        <p>Total Barang</p>
+                    </div>
+                </div>
+                <div class="card stat-card">
+                    <div class="card-icon" style="background: #2196F3;">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 id="totalStok">0</h3>
+                        <p>Total Stok</p>
+                    </div>
+                </div>
+                <div class="card stat-card">
+                    <div class="card-icon" style="background: #FF9800;">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 id="totalNilai">Rp 0</h3>
+                        <p>Nilai Inventori</p>
+                    </div>
+                </div>
+                <div class="card stat-card">
+                    <div class="card-icon" style="background: #9C27B0;">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3 id="totalKategori">0</h3>
+                        <p>Kategori</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <h3><i class="fas fa-bolt"></i> Aksi Cepat</h3>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="showSection('tambah')">
+                        <i class="fas fa-plus"></i> Tambah Barang
+                    </button>
+                    <button class="action-btn" onclick="loadData()">
+                        <i class="fas fa-sync"></i> Refresh Data
+                    </button>
+                    <button class="action-btn" onclick="exportData()">
+                        <i class="fas fa-download"></i> Export Data
+                    </button>
+                </div>
+            </div>
+
+            <div class="recent-table">
+                <div class="section-title">
+                    <h3><i class="fas fa-history"></i> Barang Terbaru</h3>
+                    <button class="btn-small" onclick="showSection('data')">
+                        Lihat Semua
+                    </button>
+                </div>
+                <div class="recent-items-container" id="recentItems">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i> Memuat data...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Barang Section -->
+        <section id="data" class="section">
+            <div class="section-header">
+                <div>
+                    <h2><i class="fas fa-table"></i> Data Barang</h2>
+                    <p class="section-subtitle" id="dataCount">Memuat data...</p>
+                </div>
+                <div class="data-controls">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Cari barang...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="view-toggle">
+                        <button class="view-btn active" onclick="toggleView('table')">
+                            <i class="fas fa-list"></i>
+                        </button>
+                        <button class="view-btn" onclick="toggleView('grid')">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                        <button class="view-btn" onclick="exportData()">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container" id="tableContainer">
+                <div class="loading-container" id="dataLoading">
+                    <i class="fas fa-spinner fa-spin"></i> Memuat data...
+                </div>
+                <div id="dataContent">
+                    <!-- Data akan dimuat di sini -->
+                </div>
+            </div>
+
+            <div class="mobile-fab" onclick="showSection('tambah')">
+                <i class="fas fa-plus"></i>
+            </div>
+        </section>
+
+        <!-- Tambah Barang Section -->
+        <section id="tambah" class="section">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2><i class="fas fa-plus-circle"></i> Tambah Barang Baru</h2>
+                    <button class="btn-back" onclick="showSection('data')">
+                        <i class="fas fa-arrow-left"></i> Kembali
+                    </button>
+                </div>
+                
+                <form id="formTambah">
+                    <div class="form-group">
+                        <label for="nama"><i class="fas fa-tag"></i> Nama Barang *</label>
+                        <input type="text" id="nama" required placeholder="Contoh: Laptop ASUS">
+                        <div class="error-message" id="namaError"></div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="harga"><i class="fas fa-money-bill"></i> Harga *</label>
+                            <div class="input-with-prefix">
+                                <span class="input-prefix">Rp</span>
+                                <input type="number" id="harga" required min="0" placeholder="1000000">
+                            </div>
+                            <div class="error-message" id="hargaError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="stok"><i class="fas fa-box"></i> Stok *</label>
+                            <input type="number" id="stok" required min="0" placeholder="10">
+                            <div class="error-message" id="stokError"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="kategori"><i class="fas fa-filter"></i> Kategori</label>
+                        <select id="kategori">
+                            <option value="Elektronik">Elektronik</option>
+                            <option value="Fashion">Fashion</option>
+                            <option value="Makanan & Minuman">Makanan & Minuman</option>
+                            <option value="Olahraga">Olahraga</option>
+                            <option value="Rumah Tangga">Rumah Tangga</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image"><i class="fas fa-image"></i> URL Gambar</label>
+                        <div class="image-upload-container">
+                            <div class="image-preview-container">
+                                <img id="imagePreview" class="image-preview" 
+                                     src="https://via.placeholder.com/150?text=Pilih+Gambar" 
+                                     alt="Preview gambar">
+                                <button type="button" class="btn-image-clear" onclick="clearImage()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="image-url-input">
+                                <input type="text" id="image" 
+                                       placeholder="https://contoh.com/gambar.jpg"
+                                       oninput="previewImage()">
+                                <small>Masukkan URL gambar atau gunakan placeholder</small>
+                                <button type="button" class="btn-image-sample" onclick="useSampleImage()">
+                                    <i class="fas fa-magic"></i> Gunakan Contoh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="deskripsi"><i class="fas fa-file-alt"></i> Deskripsi</label>
+                        <textarea id="deskripsi" rows="3" placeholder="Deskripsi singkat barang..."></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit" id="submitBtn">
+                            <i class="fas fa-save"></i> <span>Simpan Barang</span>
+                        </button>
+                        <button type="button" class="btn-cancel" onclick="resetForm()">
+                            <i class="fas fa-times"></i> <span>Reset Form</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Laporan Section -->
+        <section id="laporan" class="section">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-bar"></i> Laporan & Analisis</h2>
+                <button class="btn-back" onclick="showSection('dashboard')">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </button>
+            </div>
+            
+            <div class="stats-overview">
+                <div class="stat-item">
+                    <div class="stat-label">Barang dengan Stok Terbanyak</div>
+                    <div class="stat-value" id="topStockItem">-</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Barang Termahal</div>
+                    <div class="stat-value" id="mostExpensiveItem">-</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Kategori Terpopuler</div>
+                    <div class="stat-value" id="popularCategory">-</div>
+                </div>
+            </div>
+
+            <div class="charts-container">
+                <div class="chart-box">
+                    <h3><i class="fas fa-chart-pie"></i> Stok per Kategori</h3>
+                    <div class="chart-placeholder" id="categoryChart">
+                        <p>Memuat chart...</p>
+                    </div>
+                </div>
+                <div class="chart-box">
+                    <h3><i class="fas fa-money-bill-wave"></i> Nilai Inventori</h3>
+                    <div class="inventory-summary" id="inventoryValue">
+                        <div class="loading-spinner">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="report-actions">
+                <button class="report-btn" onclick="exportReport()">
+                    <i class="fas fa-file-excel"></i> Export Excel
+                </button>
+                <button class="report-btn" onclick="printReport()">
+                    <i class="fas fa-print"></i> Print Laporan
+                </button>
+                <button class="report-btn" onclick="generateSummary()">
+                    <i class="fas fa-file-pdf"></i> Ringkasan PDF
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal Edit -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> Edit Barang</h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="formEdit">
+                    <input type="hidden" id="editId">
+                    
+                    <div class="form-group">
+                        <label for="editNama">Nama Barang *</label>
+                        <input type="text" id="editNama" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editHarga">Harga *</label>
+                            <div class="input-with-prefix">
+                                <span class="input-prefix">Rp</span>
+                                <input type="number" id="editHarga" required min="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="editStok">Stok *</label>
+                            <input type="number" id="editStok" required min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editKategori">Kategori</label>
+                        <select id="editKategori">
+                            <option value="Elektronik">Elektronik</option>
+                            <option value="Fashion">Fashion</option>
+                            <option value="Makanan & Minuman">Makanan & Minuman</option>
+                            <option value="Olahraga">Olahraga</option>
+                            <option value="Rumah Tangga">Rumah Tangga</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editDeskripsi">Deskripsi</label>
+                        <textarea id="editDeskripsi" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-save"></i> Update Barang
+                        </button>
+                        <button type="button" class="btn-cancel" onclick="closeModal()">
+                            <i class="fas fa-times"></i> Batal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div class="toast-content">
+            <i class="fas fa-check-circle"></i>
+            <span id="toastMessage">Pesan berhasil</span>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-content">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Memproses...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
